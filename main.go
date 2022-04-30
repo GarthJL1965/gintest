@@ -62,6 +62,7 @@ func getSegmentByID(c *gin.Context) {
 	tmp_id := 0
 	if idAsInt, err := strconv.Atoi(id); err != nil {
 		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad id parameter"})
+		return
 	} else {
 		tmp_id = idAsInt
 	}
