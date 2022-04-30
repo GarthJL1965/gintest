@@ -53,7 +53,7 @@ func postSegments(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, newSegment)
 }
 
-// getAlbumByID locates the segment whose ID value matches the id
+// getSegmentByID locates the segment whose ID value matches the id
 // parameter sent by the client, then returns that segment as a response.
 func getSegmentByID(c *gin.Context) {
 	id := c.Param("id")
