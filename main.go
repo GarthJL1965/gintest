@@ -79,6 +79,11 @@ func getSegmentByID(c *gin.Context) {
 
 func main() {
 	router := gin.Default()
+
+	// Setup route group for the API
+	// api := router.Group("/api")
+	// api.GET("/segments", getSegments) -> http://localhost:8080/api/segments
+
 	router.GET("/segments", getSegments)
 	router.GET("/segments/:id", getSegmentByID)
 	router.POST("/segments", postSegments)
@@ -100,7 +105,10 @@ func Simple(verr validator.ValidationErrors) map[string]string {
 	return errs
 }
 
+// https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke?msclkid=d1dde390c85611eca4a763ef3bedf3dc
 // https://blog.logrocket.com/gin-binding-in-go-a-tutorial-with-examples/?msclkid=968ca1ffc84411eca850456bea9df49b
+// https://medium.com/@ekosuprastyo15/gin-gonic-mysql-golang-example-9185f202e968
+// https://github.com/EDDYCJY/go-gin-example?msclkid=4b72c856c85311ec90f35187eb276ac9
 
 /*
 POST data for postman
