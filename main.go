@@ -27,12 +27,11 @@ var segments = []segment{
 
 // getSegments responds with the list of all segments as JSON.
 func getSegments(c *gin.Context) {
-	//c.IndentedJSON(http.StatusOK, segments)
-	renderContent(c, gin.H{"payload": segments})
+	renderContent(c, http.StatusOK, gin.H{"payload": segments})
 }
 
-// postSegments adds a segment from JSON received in the request body.
-func postSegments(c *gin.Context) {
+// createSegment adds a segment from JSON received in the request body.
+func createSegment(c *gin.Context) {
 	var newSegment segment
 
 	// Call BindJSON to bind the received JSON to newSegment.
@@ -40,6 +39,13 @@ func postSegments(c *gin.Context) {
 		var verr validator.ValidationErrors
 		if errors.As(err, &verr) {
 			c.JSON(http.StatusBadRequest, gin.H{"errors": Simple(verr)})
+			/*
+				var response = ErrorResponse{
+					Msg: "Validation Error",
+					Err: err,
+				}
+				c.AbortWithStatusJSON(http.StatusOK, response)
+			*/
 			return
 		}
 
@@ -51,7 +57,9 @@ func postSegments(c *gin.Context) {
 
 	// Add the new segment to the slice.
 	segments = append(segments, newSegment)
-	c.IndentedJSON(http.StatusCreated, newSegment)
+	//renderContent(c, http.StatusCreated, gin.H{"payload": segments})
+	// Just show the created segment
+	renderContent(c, http.StatusCreated, gin.H{"payload": newSegment})
 }
 
 // getSegmentByID locates the segment whose ID value matches the id
@@ -69,12 +77,14 @@ func getSegmentByID(c *gin.Context) {
 	}
 	// Loop over the list of segments, looking for a segment
 	// who's ID value matches the parameter.
-	for _, a := range segments {
-		if a.ID == tmp_id {
-			c.IndentedJSON(http.StatusOK, a)
+	for _, segment := range segments {
+		if segment.ID == tmp_id {
+			//c.IndentedJSON(http.StatusOK, a)
+			renderContent(c, http.StatusOK, gin.H{"payload": segment})
 			return
 		}
 	}
+	//c.IndentedJSON(http.StatusNotFound, gin.H{"message": "segment not found"})
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "segment not found"})
 }
 
@@ -92,24 +102,25 @@ func main() {
 	// Real Routes
 	router.GET("/segments", getSegments)
 	router.GET("/segments/:id", getSegmentByID)
-	router.POST("/segments", postSegments)
+	router.POST("/segments", createSegment)
 
 	router.Run("localhost:8080")
 }
 
-func renderContent(c *gin.Context, data gin.H) {
+func renderContent(c *gin.Context, httpStatus int, data gin.H) {
 	switch c.Request.Header.Get("Accept") {
 	case "application/json":
-		c.IndentedJSON(http.StatusOK, data["payload"])
+		c.IndentedJSON(httpStatus, data["payload"])
+		//c.IndentedJSON(http.StatusOK, data["payload"])
 		//c.JSON(http.StatusOK, data["payload"])
 	case "application/xml":
-		c.XML(http.StatusOK, data["payload"])
+		c.XML(httpStatus, data["payload"])
 	//case "application/html":
 	// If doing this need template String as param to renderContent
 	//	c.HTML(http.StatusOK, "template", data["payload"])
 	default:
-		htmlStr := fmt.Sprint(data["payload"])
-		c.String(http.StatusOK, htmlStr)
+		plainStr := fmt.Sprint(data["payload"])
+		c.String(httpStatus, plainStr)
 	}
 }
 
@@ -142,4 +153,47 @@ POST data for postman
         "details": "Arrive Rome",
         "who": "DML&GJL"
     }
+*/
+
+/*
+	// gin.H is a shortcut for map[string]interface{}
+	r.GET("/someJSON", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
+	})
+
+	r.GET("/moreJSON", func(c *gin.Context) {
+		// You also can use a struct
+		var msg struct {
+			Name    string `json:"user"`
+			Message string
+			Number  int
+		}
+		msg.Name = "Lena"
+		msg.Message = "hey"
+		msg.Number = 123
+		// Note that msg.Name becomes "user" in the JSON
+		// Will output  :   {"user": "Lena", "Message": "hey", "Number": 123}
+		c.JSON(http.StatusOK, msg)
+	})
+
+	r.GET("/someXML", func(c *gin.Context) {
+		c.XML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
+	})
+
+	r.GET("/someYAML", func(c *gin.Context) {
+		c.YAML(http.StatusOK, gin.H{"message": "hey", "status": http.StatusOK})
+	})
+
+	r.GET("/someProtoBuf", func(c *gin.Context) {
+		reps := []int64{int64(1), int64(2)}
+		label := "test"
+		// The specific definition of protobuf is written in the testdata/protoexample file.
+		data := &protoexample.Test{
+			Label: &label,
+			Reps:  reps,
+		}
+		// Note that data becomes binary data in the response
+		// Will output protoexample.Test protobuf serialized data
+		c.ProtoBuf(http.StatusOK, data)
+	})
 */
