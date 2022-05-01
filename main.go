@@ -104,8 +104,24 @@ func main() {
 	router.GET("/segments", getSegments)
 	router.GET("/segments/:id", getSegmentByID)
 	router.POST("/segments", createSegment)
-
+	/*
+		router.NoRoute(func(c *gin.Context) {
+			c.AbortWithStatus(http.StatusNotFound)
+		})
+	*/
 	router.Run("localhost:8080")
+}
+
+func renderError(c *gin.Context, httpStatus int, data gin.H) {
+	switch c.Request.Header.Get("Content") {
+	case "application/json":
+		//c.AbortWithStatusJSON()
+		c.IndentedJSON(httpStatus, data["message"])
+	case "application/xml":
+		c.XML(httpStatus, data["message"])
+	default:
+		c.IndentedJSON(httpStatus, data["message"])
+	}
 }
 
 func renderContent(c *gin.Context, httpStatus int, data gin.H) {
