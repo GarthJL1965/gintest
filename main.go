@@ -27,7 +27,8 @@ var segments = []segment{
 
 // getSegments responds with the list of all segments as JSON.
 func getSegments(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, segments)
+	//c.IndentedJSON(http.StatusOK, segments)
+	renderContent(c, gin.H{"payload": segments})
 }
 
 // postSegments adds a segment from JSON received in the request body.
@@ -84,11 +85,32 @@ func main() {
 	// api := router.Group("/api")
 	// api.GET("/segments", getSegments) -> http://localhost:8080/api/segments
 
+	// Maybe Health ..
+	router.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "Hello From gintest")
+	})
+	// Real Routes
 	router.GET("/segments", getSegments)
 	router.GET("/segments/:id", getSegmentByID)
 	router.POST("/segments", postSegments)
 
 	router.Run("localhost:8080")
+}
+
+func renderContent(c *gin.Context, data gin.H) {
+	switch c.Request.Header.Get("Accept") {
+	case "application/json":
+		c.IndentedJSON(http.StatusOK, data["payload"])
+		//c.JSON(http.StatusOK, data["payload"])
+	case "application/xml":
+		c.XML(http.StatusOK, data["payload"])
+	//case "application/html":
+	// If doing this need template String as param to renderContent
+	//	c.HTML(http.StatusOK, "template", data["payload"])
+	default:
+		htmlStr := fmt.Sprint(data["payload"])
+		c.String(http.StatusOK, htmlStr)
+	}
 }
 
 func Simple(verr validator.ValidationErrors) map[string]string {
