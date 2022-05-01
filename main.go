@@ -35,7 +35,8 @@ func createSegment(c *gin.Context) {
 	var newSegment segment
 
 	// Call BindJSON to bind the received JSON to newSegment.
-	if err := c.BindJSON(&newSegment); err != nil {
+	//if err := c.BindJSON(&newSegment); err != nil {
+	if err := c.ShouldBind(&newSegment); err != nil {
 		var verr validator.ValidationErrors
 		if errors.As(err, &verr) {
 			c.JSON(http.StatusBadRequest, gin.H{"errors": Simple(verr)})
@@ -153,6 +154,15 @@ POST data for postman
         "details": "Arrive Rome",
         "who": "DML&GJL"
     }
+
+	<segment>
+		<ID>1</ID>
+		<LocalDate>2022-09-10T00:00:00+10:00</LocalDate>
+		<Name>GJL</Name>
+		<Details>Leave Sydney</Details>
+		<Who>DML&amp;GJL</Who>
+	</segment>
+
 */
 
 /*
