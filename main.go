@@ -1,93 +1,11 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	log "github.com/sirupsen/logrus"
+	"github.com/gjlanc65/gintest/controllers"
 )
-
-// segment represents data about a trip segment
-type segment struct {
-	ID        int       `json:"id"`
-	LocalDate time.Time `form:"local_date" binding:"required" time_format:"2006-01-02"`
-	Name      string    `json:"name"`
-	Details   string    `json:"details"`
-	Who       string    `json:"who"`
-}
-
-var segments = []segment{
-	{ID: 1, LocalDate: time.Date(2022, 9, 10, 00, 00, 00, 00, time.FixedZone("UTC+10", 10*3600)), Name: "GJL", Details: "Leave Sydney", Who: "DML&GJL"},
-}
-
-// getSegments responds with the list of all segments as JSON.
-func getSegments(c *gin.Context) {
-	renderContent(c, http.StatusOK, gin.H{"payload": segments})
-}
-
-// createSegment adds a segment from JSON received in the request body.
-func createSegment(c *gin.Context) {
-	var newSegment segment
-
-	// Call BindJSON to bind the received JSON to newSegment.
-	//if err := c.BindJSON(&newSegment); err != nil {
-	if err := c.ShouldBind(&newSegment); err != nil {
-		var verr validator.ValidationErrors
-		if errors.As(err, &verr) {
-			c.JSON(http.StatusBadRequest, gin.H{"errors": Simple(verr)})
-			/*
-				var response = ErrorResponse{
-					Msg: "Validation Error",
-					Err: err,
-				}
-				c.AbortWithStatusJSON(http.StatusOK, response)
-			*/
-			return
-		}
-
-		log.Info(err)
-		//log.Info().Err(err).Msg("unable to bind")
-		c.JSON(http.StatusBadRequest, gin.H{"error": "bad request"})
-		return
-	}
-
-	// Add the new segment to the slice.
-	segments = append(segments, newSegment)
-	//renderContent(c, http.StatusCreated, gin.H{"payload": segments})
-	// Just show the created segment
-	renderContent(c, http.StatusCreated, gin.H{"payload": newSegment})
-}
-
-// getSegmentByID locates the segment whose ID value matches the id
-// parameter sent by the client, then returns that segment as a response.
-func getSegmentByID(c *gin.Context) {
-	id := c.Param("id")
-
-	// Should have better validation here
-	tmp_id := 0
-	if idAsInt, err := strconv.Atoi(id); err != nil {
-		c.IndentedJSON(http.StatusBadRequest, gin.H{"message": "bad id parameter"})
-		return
-	} else {
-		tmp_id = idAsInt
-	}
-	// Loop over the list of segments, looking for a segment
-	// who's ID value matches the parameter.
-	for _, segment := range segments {
-		if segment.ID == tmp_id {
-			//c.IndentedJSON(http.StatusOK, a)
-			renderContent(c, http.StatusOK, gin.H{"payload": segment})
-			return
-		}
-	}
-	//c.IndentedJSON(http.StatusNotFound, gin.H{"message": "segment not found"})
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "segment not found"})
-}
 
 func main() {
 	router := gin.Default()
@@ -101,58 +19,15 @@ func main() {
 		c.String(http.StatusOK, "Hello From gintest")
 	})
 	// Real Routes
-	router.GET("/segments", getSegments)
-	router.GET("/segments/:id", getSegmentByID)
-	router.POST("/segments", createSegment)
+	router.GET("/segments", controllers.GetSegments)
+	router.GET("/segments/:id", controllers.GetSegmentByID)
+	router.POST("/segments", controllers.CreateSegment)
 	/*
 		router.NoRoute(func(c *gin.Context) {
 			c.AbortWithStatus(http.StatusNotFound)
 		})
 	*/
 	router.Run("localhost:8080")
-}
-
-func renderError(c *gin.Context, httpStatus int, data gin.H) {
-	switch c.Request.Header.Get("Content") {
-	case "application/json":
-		//c.AbortWithStatusJSON()
-		c.IndentedJSON(httpStatus, data["message"])
-	case "application/xml":
-		c.XML(httpStatus, data["message"])
-	default:
-		c.IndentedJSON(httpStatus, data["message"])
-	}
-}
-
-func renderContent(c *gin.Context, httpStatus int, data gin.H) {
-	switch c.Request.Header.Get("Accept") {
-	case "application/json":
-		c.IndentedJSON(httpStatus, data["payload"])
-		//c.IndentedJSON(http.StatusOK, data["payload"])
-		//c.JSON(http.StatusOK, data["payload"])
-	case "application/xml":
-		c.XML(httpStatus, data["payload"])
-	//case "application/html":
-	// If doing this need template String as param to renderContent
-	//	c.HTML(http.StatusOK, "template", data["payload"])
-	default:
-		plainStr := fmt.Sprint(data["payload"])
-		c.String(httpStatus, plainStr)
-	}
-}
-
-func Simple(verr validator.ValidationErrors) map[string]string {
-	errs := make(map[string]string)
-
-	for _, f := range verr {
-		err := f.ActualTag()
-		if f.Param() != "" {
-			err = fmt.Sprintf("%s=%s", err, f.Param())
-		}
-		errs[f.Field()] = err
-	}
-
-	return errs
 }
 
 // https://dev.to/codehakase/building-a-web-app-with-go-gin-and-react-5ke?msclkid=d1dde390c85611eca4a763ef3bedf3dc
