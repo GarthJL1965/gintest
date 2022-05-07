@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gjlanc65/gintest/db"
 	"github.com/gjlanc65/gintest/models"
 	"github.com/gjlanc65/gintest/utils"
 	"github.com/go-playground/validator/v10"
@@ -34,13 +34,9 @@ type ErrorResponse struct {
 	Err string
 }
 
-var segments = []models.Segment{
-	{ID: 1, LocalDate: time.Date(2022, 9, 10, 00, 00, 00, 00, time.FixedZone("UTC+10", 10*3600)), Name: "GJL", Details: "Leave Sydney", Who: "DML&GJL"},
-}
-
 // getSegments responds with the list of all segments as JSON.
 func GetSegments(c *gin.Context) {
-	utils.RenderContent(c, http.StatusOK, gin.H{"payload": segments})
+	utils.RenderContent(c, http.StatusOK, gin.H{"payload": db.Segments})
 }
 
 // createSegment adds a segment from JSON received in the request body.
@@ -77,7 +73,7 @@ func CreateSegment(c *gin.Context) {
 	}
 
 	// Add the new segment to the slice.
-	segments = append(segments, newSegment)
+	db.Segments = append(db.Segments, newSegment)
 	// Just show the created segment
 	utils.RenderContent(c, http.StatusCreated, gin.H{"payload": newSegment})
 }
@@ -90,7 +86,7 @@ func GetSegmentByID(c *gin.Context) {
 	if idAsInt, err := strconv.Atoi(idAsStr); err == nil {
 		// Loop over the list of segments, looking for a segment
 		// who's ID value matches the parameter.
-		for _, segment := range segments {
+		for _, segment := range db.Segments {
 			if segment.ID == idAsInt {
 				utils.RenderContent(c, http.StatusOK, gin.H{"payload": segment})
 				return
