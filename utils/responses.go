@@ -7,9 +7,10 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-// router.AbortWithStatusJSON() exists but there's no c.AbortWithStatusXML()
+// router.AbortWithStatusJSON() exists but there's no corresponding
+// router.AbortWithStatusXML()
 // Q) Why wouldnt we send back errors as XML if the client/request system
-// was XML based AND set Content-Type to application/aml ?
+// was XML based AND set Content-Type to application/xml ?
 // .. what's the beef with this 'everything has to be JSON' ?
 func RenderError(c *gin.Context, httpStatus int, data gin.H) {
 	switch c.Request.Header.Get("Content-Type") {
