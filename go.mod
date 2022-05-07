@@ -2,15 +2,14 @@ module gintest
 
 go 1.17
 
-require (
-	github.com/gin-gonic/gin v1.7.7
-	github.com/gjlanc65/gintest/controllers v0.0.0
-	github.com/gjlanc65/gintest/models v0.0.0
-	github.com/gjlanc65/gintest/db v0.0.0
-)
+require github.com/gjlanc65/gintest/routes v0.0.0
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/gin-gonic/gin v1.7.7 // indirect
+	github.com/gjlanc65/gintest/controllers v0.0.0 // indirect
+	github.com/gjlanc65/gintest/db v0.0.0 // indirect
+	github.com/gjlanc65/gintest/models v0.0.0 // indirect
 	github.com/gjlanc65/gintest/utils v0.0.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -32,7 +31,8 @@ require (
 
 replace (
 	github.com/gjlanc65/gintest/controllers => ./controllers
-	github.com/gjlanc65/gintest/models => ./models
-	github.com/gjlanc65/gintest/utils => ./utils
 	github.com/gjlanc65/gintest/db => ./db
+	github.com/gjlanc65/gintest/models => ./models
+	github.com/gjlanc65/gintest/routes => ./routes
+	github.com/gjlanc65/gintest/utils => ./utils
 )
