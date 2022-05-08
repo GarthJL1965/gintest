@@ -15,8 +15,8 @@ func SetupRouter() *gin.Engine {
 	// api.GET("/segments", getSegments) -> http://localhost:8080/api/segments
 
 	// Maybe Health ..
-	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello From gintest")
+	router.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
 	})
 	// Real Routes
 	router.GET("/segments", controllers.GetSegments)
