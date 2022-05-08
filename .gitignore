@@ -14,6 +14,6 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
-# Ignore go.mod && go.sum because of MAC work 
-go.mod
+# Ignore go.mod && go.sum because of MAC work
+#go.mod
 go.sum
