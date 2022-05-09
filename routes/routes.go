@@ -24,7 +24,6 @@ func SetupRouter() *gin.Engine {
 	})
 
 	// Docs (OpenAPI/'Swagger' (depcrecated term))
-	// docs route
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	ginSwagger.WrapHandler(swaggerFiles.Handler,
 		ginSwagger.URL("http://localhost:8080/swagger/doc.json"),
