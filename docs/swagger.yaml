@@ -1,0 +1,107 @@
+basePath: /
+definitions:
+  gintest_controllers.ErrorResponse:
+    properties:
+      err:
+        description: Err error
+        type: string
+      msg:
+        type: string
+    type: object
+  github.com_gjlanc65_gintest_controllers.ErrorResponse:
+    properties:
+      err:
+        description: Err error
+        type: string
+      msg:
+        type: string
+    type: object
+  models.Segment:
+    description: trip Segment information
+    properties:
+      details:
+        type: string
+      id:
+        type: integer
+      localDate:
+        type: string
+      name:
+        type: string
+      who:
+        type: string
+    required:
+    - localDate
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: '[protected]'
+    name: API Support
+    url: https://github.com/GJLANC65/gintest
+  description: This is a sample server. You can visit the GitHub repository at https://github.com/GJLANC65/gintest
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Go + Gin Trip Segment API
+  version: "1.0"
+paths:
+  /segments:
+    get:
+      operationId: get-segments
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Segment'
+      summary: get all items in the segment list
+    post:
+      consumes:
+      - application/json
+      - application/xml
+      operationId: create-segment
+      parameters:
+      - description: segment data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.Segment'
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Segment'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gintest_controllers.ErrorResponse'
+      summary: add a new item to the segment list
+  /segments/{id}:
+    get:
+      operationId: get-segment-by-id
+      parameters:
+      - description: segment ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      - application/xml
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Segment'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gintest_controllers.ErrorResponse'
+      summary: get a segment item by ID
+swagger: "2.0"

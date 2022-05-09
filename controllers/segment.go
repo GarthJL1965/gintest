@@ -34,16 +34,32 @@ type ErrorResponse struct {
 	Err string
 }
 
-// getSegments responds with the list of all segments as JSON.
+// @Summary get all items in the segment list
+// @ID get-segments
+// @Produce application/json
+// @Produce application/xml
+// @Success 200 {object} models.Segment
+// @Router /segments [get]
+// getSegments responds with the list of all segments as JSON|XML.
 func GetSegments(c *gin.Context) {
 	utils.RenderContent(c, http.StatusOK, gin.H{"payload": db.Segments})
 }
 
-// createSegment adds a segment from JSON received in the request body.
+// @Summary add a new item to the segment list
+// @ID create-segment
+// @Accept application/json
+// @Accept application/xml
+// @Produce application/json
+// @Produce application/xml
+// @Param data body models.Segment true "segment data"
+// @Success 201 {object} models.Segment
+// @Failure 400 {object} controllers.ErrorResponse
+// @Router /segments [post]
+// createSegment adds a segment from JSON|XML received in the request body.
 func CreateSegment(c *gin.Context) {
 	var newSegment models.Segment
 
-	// Call BindJSON to bind the received JSON to newSegment.
+	// Call BindJSON to bind the received JSON|XML to newSegment.
 	//if err := c.BindJSON(&newSegment); err != nil {
 	if err := c.ShouldBind(&newSegment); err != nil {
 		var verr validator.ValidationErrors
@@ -78,6 +94,14 @@ func CreateSegment(c *gin.Context) {
 	utils.RenderContent(c, http.StatusCreated, gin.H{"payload": newSegment})
 }
 
+// @Summary get a segment item by ID
+// @ID get-segment-by-id
+// @Produce application/json
+// @Produce application/xml
+// @Param id path string true "segment ID"
+// @Success 200 {object} models.Segment
+// @Failure 404 {object} controllers.ErrorResponse
+// @Router /segments/{id} [get]
 // getSegmentByID locates the segment whose ID value matches the id
 // parameter sent by the client, then returns that segment as a response.
 func GetSegmentByID(c *gin.Context) {

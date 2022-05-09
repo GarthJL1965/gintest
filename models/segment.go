@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// @Description trip Segment information
 type Segment struct {
 	ID        int       `json:"id"`
 	LocalDate time.Time `form:"local_date" binding:"required" time_format:"2006-01-02"`
