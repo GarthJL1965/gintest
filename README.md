@@ -10,6 +10,11 @@ OpenAPI (Swagger) working, needs a tidy up (duplicate models mainly, see notes b
 
 ## [GJL Note to self - OpenAPI Setup]
 
+* go get -u github.com/swaggo/swag/cmd/swag
+* go install github.com/swaggo/swag/cmd/swag
+* go get -u github.com/swaggo/gin-swagger
+* go get -u github.com/swaggo/files
+
 Main (main.go) imports _ "github.com/gjlanc65/gintest/docs" (from swag init)<br>
 
 Main (main.go) runs docs.SwaggerInfo.BasePath = "/"<br>
