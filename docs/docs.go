@@ -73,7 +73,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/gintest_controllers.ErrorResponse"
+                            "$ref": "#/definitions/github.com_gjlanc65_gintest_controllers.ErrorResponse"
                         }
                     }
                 }
@@ -106,7 +106,7 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/gintest_controllers.ErrorResponse"
+                            "$ref": "#/definitions/github.com_gjlanc65_gintest_controllers.ErrorResponse"
                         }
                     }
                 }

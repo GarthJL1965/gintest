@@ -45,6 +45,45 @@ func GetSegments(c *gin.Context) {
 	utils.RenderContent(c, http.StatusOK, gin.H{"payload": db.Segments})
 }
 
+// @Summary get a segment item by ID
+// @ID get-segment-by-id
+// @Produce application/json
+// @Produce application/xml
+// @Param id path string true "segment ID"
+// @Success 200 {object} models.Segment
+// @Failure 404 {object} controllers.ErrorResponse
+// @Router /segments/{id} [get]
+// getSegmentByID locates the segment whose ID value matches the id
+// parameter sent by the client, then returns that segment as a response.
+func GetSegmentByID(c *gin.Context) {
+	idAsStr := c.Param("id")
+
+	if idAsInt, err := strconv.Atoi(idAsStr); err == nil {
+		// Loop over the list of segments, looking for a segment
+		// who's ID value matches the parameter.
+		for _, segment := range db.Segments {
+			if segment.ID == idAsInt {
+				utils.RenderContent(c, http.StatusOK, gin.H{"payload": segment})
+				return
+			}
+		}
+		// Handle/Respond to not found ...
+		var notFoundResponse = ErrorResponse{
+			Msg: "Data Not Found",
+			Err: fmt.Sprintf("Segment (%d) not found", idAsInt),
+		}
+		utils.RenderError(c, http.StatusNotFound, gin.H{"error": notFoundResponse})
+		return
+
+	} else {
+		var badParamResponse = ErrorResponse{
+			Msg: "Bad Parameter",
+			Err: fmt.Sprintf("id Parameter not numeric (%s)", idAsStr),
+		}
+		utils.RenderError(c, http.StatusBadRequest, gin.H{"error": badParamResponse})
+	}
+}
+
 // @Summary add a new item to the segment list
 // @ID create-segment
 // @Accept application/json
@@ -92,43 +131,4 @@ func CreateSegment(c *gin.Context) {
 	db.Segments = append(db.Segments, newSegment)
 	// Just show the created segment
 	utils.RenderContent(c, http.StatusCreated, gin.H{"payload": newSegment})
-}
-
-// @Summary get a segment item by ID
-// @ID get-segment-by-id
-// @Produce application/json
-// @Produce application/xml
-// @Param id path string true "segment ID"
-// @Success 200 {object} models.Segment
-// @Failure 404 {object} controllers.ErrorResponse
-// @Router /segments/{id} [get]
-// getSegmentByID locates the segment whose ID value matches the id
-// parameter sent by the client, then returns that segment as a response.
-func GetSegmentByID(c *gin.Context) {
-	idAsStr := c.Param("id")
-
-	if idAsInt, err := strconv.Atoi(idAsStr); err == nil {
-		// Loop over the list of segments, looking for a segment
-		// who's ID value matches the parameter.
-		for _, segment := range db.Segments {
-			if segment.ID == idAsInt {
-				utils.RenderContent(c, http.StatusOK, gin.H{"payload": segment})
-				return
-			}
-		}
-		// Handle/Respond to not found ...
-		var notFoundResponse = ErrorResponse{
-			Msg: "Data Not Found",
-			Err: fmt.Sprintf("Segment (%d) not found", idAsInt),
-		}
-		utils.RenderError(c, http.StatusNotFound, gin.H{"error": notFoundResponse})
-		return
-
-	} else {
-		var badParamResponse = ErrorResponse{
-			Msg: "Bad Parameter",
-			Err: fmt.Sprintf("id Parameter not numeric (%s)", idAsStr),
-		}
-		utils.RenderError(c, http.StatusBadRequest, gin.H{"error": badParamResponse})
-	}
 }
