@@ -50,6 +50,7 @@ replace (
 	github.com/gjlanc65/gintest/controllers => ./controllers
 	github.com/gjlanc65/gintest/db => ./db
 	github.com/gjlanc65/gintest/docs => ./docs
+	github.com/gjlanc65/gintest/mmiddleware => ./mmiddleware
 	github.com/gjlanc65/gintest/models => ./models
 	github.com/gjlanc65/gintest/routes => ./routes
 	github.com/gjlanc65/gintest/utils => ./utils

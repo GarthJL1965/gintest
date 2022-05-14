@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/gjlanc65/gintest/controllers v0.0.0
-	github.com/gjlanc65/gintest/docs v0.0.0
+	github.com/gjlanc65/gintest/middleware v0.0.0
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.4.3
 )
@@ -16,6 +16,7 @@ require (
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gjlanc65/gintest/db v0.0.0 // indirect
+	//github.com/gjlanc65/gintest/middleware v0.0.0
 	github.com/gjlanc65/gintest/models v0.0.0 // indirect
 	github.com/gjlanc65/gintest/utils v0.0.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
@@ -48,6 +49,7 @@ replace (
 	github.com/gjlanc65/gintest/controllers => ../controllers
 	github.com/gjlanc65/gintest/db => ../db
 	github.com/gjlanc65/gintest/docs => ../docs
+	github.com/gjlanc65/gintest/middleware => ../middleware
 	github.com/gjlanc65/gintest/models => ../models
 	github.com/gjlanc65/gintest/routes => ../routes
 	github.com/gjlanc65/gintest/utils => ../utils

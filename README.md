@@ -35,7 +35,7 @@ This may be reason for duplicate models below<br>
 swag init -d ./,./models,./controllers --parseDependency --parseInternal
 ```
 
-Note package (model.s, controllers.) in controllers\segment.go seems better than including '.models' in init command
+Note package (models., controllers.) in controllers\segment.go seems better than including '.models' in init command
 ```
 // @Success 201 {object} models.Segment
 // @Failure 400 {object} controllers.ErrorResponse
@@ -49,4 +49,28 @@ Note package (model.s, controllers.) in controllers\segment.go seems better than
 ## TODO :
 * Fix controllers\segment.go error handling in CreateSegment Code (JSON|XML)
 
-WestWind 'Markdown Monster' used for Markdown
+## Test data for Postman
+```JSON
+{
+    "id": 3,
+    "LocalDate": "2022-09-11T17:10:00+10:00",
+    "name": "RMN",
+    "details": "Depart",
+    "who": "RMN&&MMN"
+}
+```
+```XML
+<segment>
+    <ID>1</ID>
+    <LocalDate>2022-09-10T00:00:00+10:00</LocalDate>
+    <Name>RMN</Name>
+    <Details>Depart</Details>
+    <Who>RMN&amp;&amp;MMN</Who>
+</segment>
+```
+
+## Acknowledgments
+
+See : https://www.stackhawk.com/blog/configuring-cors-for-go/ for nice CORS pic
+
+WestWind 'Markdown Monster' https://markdownmonster.west-wind.com/ used for Markdown
